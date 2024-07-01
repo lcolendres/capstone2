@@ -53,5 +53,8 @@ custom_config = r'--oem 3 --psm 6'
 # Convert the processed image to text using Tesseract
 text = pytesseract.image_to_string(final_thresh, config=custom_config)
 
+# Ensure text is properly encoded
+text = text.encode('utf-8').decode('utf-8')
+
 # Print the extracted text
 print(text)
