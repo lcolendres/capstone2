@@ -28,48 +28,54 @@
         <!-- Main content -->
         <section class="content mt-5">
             <div class="container-fluid">
-                <div class="text-center">
-                    <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 text-center">
+                        <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo" class="img-fluid">
 
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" autocomplete="off" placeholder="Enter tracking code" id="tracking_code">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card" id="student_data" style="display: none;">
-                    <div class="card-body">
-                        <div class="">
-                            <h4>Student Details</h4>
-                            <span id="student"></span>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card" id="student_data" style="display: none;">
+                            <div class="card-body">
+                                <div class="">
+                                    <h4>Student Details</h4>
+                                    <span id="student"></span>
+                                </div>
+
+                                <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2">
+                                    <i class="fa fa-print"></i> Print
+                                </a>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered text-center" id="student_data_tbl">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Subjects to be Accredited</th>
+                                                <th rowspan="2" class="align-middle">Accredited to (Subject Code & Descriptive Title)</th>
+                                                <th rowspan="2" class="align-middle">Remarks</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Subject Code</th>
+                                                <th>Descriptive Title</th>
+                                                <th>Units</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <cite style="color:red;"><span style="font-weight: bold;">Notice:</span> The print button will only be available once your corresponding program chairperson validates your subject accreditation request.</cite>
+                            </div>
                         </div>
-
-                        <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2">
-                            <i class="fa fa-print"></i> Print
-                        </a>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center" id="student_data_tbl">
-                                <thead>
-                                    <tr>
-                                        <th colspan=3>Subjects to be Accredited</th>
-                                        <th rowspan=2 class="align-middle">Accredited to (Subject Code & Descriptive Title)</th>
-                                        <th rowspan=2 class="align-middle">Remarks</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Subject Code</th>
-                                        <th>Descriptive Title</th>
-                                        <th>Units</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <cite style="color:red;"><span style="font-weight: bold;">Notice:</span> The print button will only be available once your corresponding program chairperson validates your subject accreditation request.</cite>
                     </div>
                 </div>
             </div>
@@ -96,7 +102,7 @@
             $(function() {
                 // Search Button
                 $('#searchBtn').on('click', function() {
-                    if($('#tracking_code').val() == "") {
+                    if ($('#tracking_code').val() == "") {
                         alert('Enter tracking code');
                     } else {
                         $.ajax({
@@ -107,14 +113,14 @@
                                 var html = "";
 
                                 $('#student_data').css('display', 'block');
-                                for(var i = 0; i <= response.data.length - 1; i++) {
-                                    if(response.data[i].recom_app == 0) {
+                                for (var i = 0; i <= response.data.length - 1; i++) {
+                                    if (response.data[i].recom_app == 0) {
                                         // Disable print button
                                         $('#printBtn').addClass("disabled");
                                     }
                                 }
 
-                                for(var i = 0; i <= response.data.length - 1; i++) {
+                                for (var i = 0; i <= response.data.length - 1; i++) {
 
                                     html += 
                                         `<tr>
@@ -123,19 +129,19 @@
                                             <td>${ response.data[i].subject.unit }</td>
                                             <td>${ response.data[i].subject.subject_code } - ${ response.data[i].subject.subject_description }</td>`;
 
-                                    if(response.data[i].status == 1) {
+                                    if (response.data[i].status == 1) {
                                         html +=
                                         `
                                             <td><span class="badge badge-secondary">Pending</span></td>
                                         </tr>
                                         `
-                                    } else if(response.data[i].status == 2) {
+                                    } else if (response.data[i].status == 2) {
                                         html +=
                                         `
                                         <td><span class="badge badge-primary">Approved</span></td>
                                         </tr>
                                         `
-                                    } else if(response.data[i].status == 3) {
+                                    } else if (response.data[i].status == 3) {
                                         html +=
                                         `
                                         <td><span class="badge badge-danger">Denied</span></td>
@@ -147,7 +153,7 @@
                                 $('#student_data_tbl tbody').html(html);
 
                                 var student_details = `<h5><span style="font-weight: bold;">Student ID:</span> ${ response.student.student_id }</h5>`
-                                if(response.student.suffix != null) {
+                                if (response.student.suffix != null) {
                                 student_details += `<h5><span style="font-weight: bold;">Name:</span> ${ response.student.last_name }, ${ response.student.first_name } ${ response.student.suffix } ${ response.student.middle_name }</h5>`
                                 } else {
                                 student_details += `<h5><span style="font-weight: bold;">Name:</span> ${ response.student.last_name }, ${ response.student.first_name } ${ response.student.middle_name }</h5>`
